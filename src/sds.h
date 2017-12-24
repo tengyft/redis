@@ -247,6 +247,30 @@ sds  sdscatsds(sds s, const sds t);
 sds  sdscpylen(sds s, const char* t, size_t len);
 sds  sdscpy(sds s, const char* t);
 
+// GCC __attribute__扩展
+// __attribute__((format(archetype, string-index, first-to-check)))
+// format属性指定一个函数签名使用类似printf, scanf, strftime, 或者strfmon的风格,
+// 使GCC做相应的函数签名检查.
+// archetype:
+//     指定format属性如何解释, 它可以是printf, scanf, strftime,
+//     gnu_printf, gnu_scanf, gnu_strftime, strfmon. gnu开头的优先使用GNU C
+//     Library接受的格式, 而其他的优先使用系统C运行库接受的格式.
+// string-index:
+//     指定哪个参数是格式化字符串(fmt), 其中索引从1开始,
+//     而不是从0开始.
+// first-to-check:
+//     指定与格式化字符串(fmt)相对应的第一个参数的索引值.
+//     对于有些没有需要检测参数的函数来说(如vprintf), 这个值为0. 也就是说,
+//     参数不是'...'的, 指定为0. 对于strftime风格来说, 这个值需要指定为0.
+// 由于C++的非静态方法中隐含了一个this参数,
+// 所以这些参数的索引值需要从2开始而不是从1开始. 也就是说, string-index,
+// first-to-check的值从2开始计算.
+// 如: sds sdscatprintf(sds s, const char* fmt, ...)
+//     __attribute__((format(printf, 2, 3)));
+// 这会使GCC检查sdscatprintf的参数风格是否与printf函数的参数风格一致.
+// 格式化字符串(fmt)是sdscatprintf函数的第二个参数,
+// GCC从sdscatprintf函数的第三个参数开始做检测.
+
 sds sdscatvprintf(sds s, const char* fmt, va_list ap);
 #ifdef __GNUC__
 sds sdscatprintf(sds s, const char* fmt, ...)
