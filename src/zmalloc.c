@@ -35,6 +35,13 @@
  * for instance to free results obtained by backtrace_symbols(). We need
  * to define this function before including zmalloc.h that may shadow the
  * free implementation if we use jemalloc or another non standard allocator. */
+// zlibc_free 这个函数为我们提供了使用原始libc(系统中的默认C)中的free函数的方式.
+// 这有助于释放如通过backtrace_symbols()函数获得的结果(backtrace_symbols()函数会调用
+// malloc来为返回值分配内存, 具体情况参见其man手册).
+// 如果我们使用了jemalloc或是其他非标准的内存分配函数,
+// 并且zmalloc.h头文件在zlibc_free 函数定义之前引用,
+// 那么会导致使用非标准的free函数, 所以zlibc_free函数需要在引入
+// zmalloc.h头文件之前定义.
 void zlibc_free(void* ptr) { free(ptr); }
 
 #include "atomicvar.h"
