@@ -43,12 +43,14 @@
 // 那么会导致使用非标准的free函数, 所以zlibc_free函数需要在引入
 // zmalloc.h头文件之前定义.
 void zlibc_free(void* ptr) { free(ptr); }
-
-#include "atomicvar.h"
-#include "config.h"
-#include "zmalloc.h"
 #include <pthread.h>
 #include <string.h>
+
+#include "config.h"
+
+#include "zmalloc.h"
+
+#include "atomicvar.h"
 
 #ifdef HAVE_MALLOC_SIZE
 #define PREFIX_SIZE (0)

@@ -32,3 +32,6 @@ Makefile.dep
 # KDevelop
 .kdev4/
 *.kdev4
+
+# CLion
+cmake-build-debug/
